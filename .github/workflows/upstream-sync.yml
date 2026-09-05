@@ -29,5 +29,6 @@ jobs:
             git remote set-url upstream https://github.com/solanabr/auditor-skill.git
 
           git fetch upstream main
-          git merge --no-edit upstream/main
+          git merge -X ours --no-edit upstream/main
+          git checkout HEAD -- .github/workflows/
           git push origin main
