@@ -121,7 +121,7 @@
 | 18 | Privacy, Compliance & Change Mgmt | 60 | | | | | % |
 | 19 | AI Agent Security | 31 | | | | | % |
 | 20 | Rust Off-Chain Services | 17 | | | | | % |
-| | **Total** | **1346** | | | | | **%** |
+| | **Total** | **1390** | | | | | **%** |
 
 > Note: Only applicable checklists are counted in totals. Non-applicable checklists are excluded entirely.
 
@@ -260,21 +260,21 @@
 
 ```
 [PASS]      BE-001: {reason}
-...through BE-103
+...through BE-126
 ```
 
 ### Checklist 10 — Frontend Security
 
 ```
 [PASS]      FE-001: {reason}
-...through FE-076
+...through FE-082
 ```
 
 ### Checklist 11 — Supply Chain
 
 ```
 [PASS]      SC-001: {reason}
-...through SC-046
+...through SC-052
 ```
 
 ### Checklist 12 — Secrets & OpSec
@@ -288,7 +288,7 @@
 
 ```
 [PASS]      DEP-001: {reason}
-...through DEP-079
+...through DEP-086
 ```
 
 ### Checklist 14 — Python Safety (if applicable)
@@ -326,7 +326,7 @@
 ...through PC-060
 ```
 
-### Known Vectors Results (KV-001..KV-131)
+### Known Vectors Results (KV-001..KV-134)
 
 ```
 [PASS]      KV-001: {reason}
@@ -334,7 +334,7 @@
               File: {path:line}
               Impact: {what can go wrong}
               Fix: {what to change}
-...through KV-131
+...through KV-134
 ```
 
 ---
@@ -356,7 +356,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Total known vectors | 131 |
+| Total known vectors | 134 |
 | PASS | <!-- N --> |
 | FAIL | <!-- N --> |
 | PARTIAL | <!-- N --> |

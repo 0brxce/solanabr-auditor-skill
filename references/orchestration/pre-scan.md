@@ -24,11 +24,12 @@ It parses every `*.rs` (skipping `target/`, `.git/`, `node_modules/`) with a rea
 | Key | What it gives the auditor |
 |-----|---------------------------|
 | `instructions[]` | every `#[program]` handler + its typed args → **seeds Phase 0.3 instruction matrix** |
-| `accounts_structs[]` | every `#[derive(Accounts)]` struct, per-field parsed `#[account(...)]` constraints (`init`/`mut`/`signer`/`has_one`/`seeds`/`bump`/`close`/`owner`/`token::*`/`realloc`) + raw text → **seeds checklists 01/04** |
+| `accounts_structs[]` | every `#[derive(Accounts)]` struct, per-field parsed `#[account(...)]` constraints (`init`/`init_if_needed`/`mut`/`signer`/`has_one`/`seeds`/`bump`/`close`/`owner`/`token::*`/`realloc`) + `unchecked` flag for `UncheckedAccount` fields + raw text → **seeds checklists 01/04** |
 | `pdas[]` | every `seeds = [...]` catalog → **seeds checklist 04 PDA review** |
 | `arithmetic_sites[]` | every RAW `+ - * /` / `+= -= *= /=` with `file:line` → **the checklist-03 worklist** (LLM judges reachability; the tool does not) |
 | `panic_sites[]` | `unwrap`/`expect`/index/`panic!` sites → **checklist 03 / DoS review** |
 | `cpi_sites[]` | `invoke`/`invoke_signed`/`CpiContext` → **checklist 04 CPI review** |
+| `remaining_accounts_sites[]` | `.remaining_accounts` field access → **checklist 01 remaining-accounts review** |
 | `unsafe_blocks[]`, `functions[]` | `unsafe` surface + call-graph seed |
 
 **How the auditor consumes it.** Load `prescan.json` at Phase 0. Treat it as a *map of where to look*, not a set of findings — it has **no verdicts**. Every reported site still goes through the normal checklist + Rule 5b reasoning. The win is twofold: (1) the instruction/constraint/PDA/arithmetic tables are already built, so Phase 0.2–0.4 cost near-zero; (2) a file with **zero** scan hits gets a spot-check instead of a full read. A raw arithmetic or panic site the scan surfaces is a *candidate*, never a confirmed bug — never report a `arithmetic_sites` entry as a finding without the checklist-03 reachability + bounds analysis.
@@ -45,12 +46,15 @@ The prescan is also a **relevance map**: when a signal is a *provably-empty* set
 |---------------------------------|--------------------------------------|-----------------------------------------------------------------|
 | `cpi_sites: []` | checklist 04 CPI sections (§4.1–4.2, CPI-target/reentrancy items) + KV CPI cluster (003 reentrancy, 009 unchecked CPI target) | eyes hit `invoke` / `invoke_signed` / `CpiContext` / any cross-program call in source |
 | `pdas: []` | PDA-confusion vectors (010 type-cosplay, 026 seed-collision, 104 non-canonical bump) + checklist 04 §4.3–4.4 (PDA derivation) | eyes hit `seeds =` / `find_program_address` / `create_program_address` |
-| no `token_2022` / `transfer_hook` / `TransferFee` / `get_extension` (grep + no `token::*` T22 hits) | token-2022 methodology (`references/methodologies/token-2022.md`) + KV 018 (fee-on-transfer), 023 (transfer-hook), 105 (extension abuse) + checklist 01 §1.8 | eyes hit `spl_token_2022` / `get_extension` / `InterfaceAccount` over a T22 mint / any extension type |
+| no `token_2022` / `transfer_hook` / `TransferFee` / `get_extension` (grep + no `token::*` T22 hits) | token-2022 methodology (`references/methodologies/token-2022.md`, incl. §9 Token ACL) + KV 018 (fee-on-transfer), 023 (transfer-hook), 105 (extension abuse), 134 (Token ACL gate bypass) + checklist 01 §1.8 | eyes hit `spl_token_2022` / `get_extension` / `InterfaceAccount` over a T22 mint / any extension type / `token_acl` / `gating_program` |
 | no `pyth` / `switchboard` (grep, incl. `PriceUpdate` / `PullFeed` / `get_price`) | oracles methodology (`references/methodologies/oracles.md`) + KV 005 (oracle manipulation) + checklist 06 §6.9 (oracle) | eyes hit `pyth` / `switchboard` / any oracle account read or price feed |
 | no `realm` / `proposal` / `spl-governance` (grep, incl. `vote_record` / `voter_weight`) | governance methodology (`references/methodologies/governance.md`) + KV 021 (vote buying), 119 (durable-nonce governance) | eyes hit `spl-governance` / `realm` / `proposal` / vote-weight logic |
 | no `guardian` / `vaa` / `emitter` (grep, incl. `verify_signatures` / `attestation`) | bridges methodology (`references/methodologies/bridges.md`) + KV 022 (fake-proof bridge) | eyes hit `guardian` / `vaa` / `emitter` / cross-chain message verification |
+| no `tokenlist` / `assetId` / `getTokenBySymbol` / `riskScore` / `trustTier` (grep, incl. `tokens.xyz` / `rugcheck` / `webacy` / `isVerified`) | token-registry methodology (`references/methodologies/token-registry-risk.md`) + KV 132 (canonical-asset spoofing), 133 (risk-score farming) | eyes hit any symbol→mint resolution, a fetched token list, or a grade / tier / `verified` flag used in a decision |
 | `unsafe_blocks: []` **and** Anchor detected | checklist 01 §1.10 (native/Pinocchio no-Anchor safety) + KV 109 (Pinocchio/p-token manual validation) | eyes hit `unsafe` / `pinocchio` / `p-token` / manual zero-copy account casting |
 | `panic_sites: []` | checklist 03 DoS spot-check (unwrap/expect/index items) + KV 025 (compute-budget DoS), 111 (BPF stack overflow DoS) | eyes hit `unwrap()` / `expect()` / indexing / `panic!` / unbounded loop over user input |
+| no `init_if_needed` in any `accounts_structs[].fields[].constraints` | KV 014 (account reinitialization), KV 127 (init front-running) + checklist 01 AV-023/AV-024 | eyes hit `init_if_needed` in any `#[account(...)]` |
+| `remaining_accounts_sites: []` **and** no `unchecked: true` fields | checklist 01 remaining-accounts / manual-validation items + KV 027 (missing discriminator) | eyes hit `.remaining_accounts` or `UncheckedAccount` / bare `AccountInfo` |
 
 **Two hard safety properties — do not weaken either:**
 
