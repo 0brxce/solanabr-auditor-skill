@@ -120,6 +120,8 @@ Every item below is a single verification step. Mark each `[PASS]`, `[FAIL-{seve
 - [ ] **AV-074**: Instruction index used in introspection is computed safely (relative or validated) — no fixed-index assumption an attacker can shift by inserting instructions
 - [ ] **AV-075**: Privileged accounts (treasury/authority/config) are bound via `has_one` / `seeds` / `address` / `require_keys_eq!` and never trusted by transaction position or ALT-resolved order (see KV-103)
 - [ ] **AV-076**: PDA bumps are canonical (`find_program_address` / Anchor canonical bump), stored in state, and reused — no user-supplied bump is fed to `create_program_address` (see KV-104)
+- [ ] **AV-089**: No `require!` / branch reads `ComputeBudgetProgram` instructions from the Instructions sysvar (priority-fee floor, CU-limit floor, "budget instruction must be first / only other instruction") — under transaction v1 those instructions are no-ops and the real config lives in the message header, which no sysvar or syscall exposes; such a gate is silently unenforced or rejects every v1 user (see KV-135)
+- [ ] **AV-090**: Instruction-introspection loops and positional / count assumptions (`load_instruction_at`, `get_instruction_relative`, "exactly N instructions", `remaining_accounts.len() <= N`) are correct for up to 64 instructions and 64 inline accounts (v1 caps), tolerate the presence of no-op ComputeBudget instructions, and do not rely on address-lookup-table resolution (v1 has none — see KV-103, `references/vuln-classes/transaction-v1.md` V5)
 
 ## 1.10 — Native / Pinocchio (No-Anchor) Program Safety
 

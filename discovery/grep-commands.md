@@ -317,6 +317,16 @@ grep_search: "riskScore|risk_score|trustTier|liquidityTier|isVerified|rugcheck|w
 ```
 > Any hit that reaches a swap / send / collateral / listing decision loads `references/methodologies/token-registry-risk.md`.
 
+### Transaction v1 readiness (KV-135 / KV-136, TS-061..064, BE-127..131, RS-018..021)
+```
+grep_search: "getTransaction|getBlock|blockSubscribe|get_transaction_with_config|get_block_with_config"   isRegexp: true   includePattern: "**/*.{ts,rs,py,go}"
+grep_search: "maxSupportedTransactionVersion|max_supported_transaction_version"   isRegexp: true   includePattern: "**/*.{ts,rs,py,go}"
+grep_search: "ComputeBudget|SetComputeUnitPrice|computeUnitPrice|micro.?lamports"   isRegexp: true   includePattern: "**/*.{ts,rs,py,go}"
+grep_search: "feePayer|fee_payer|sponsor|paymaster|gasless|partialSign"   isRegexp: true   includePattern: "apps/**/*.{ts,rs,py}"
+grep_search: "load_instruction_at|get_instruction_relative"   isRegexp: true   includePattern: "programs/**/*.rs"
+```
+> Every read site must carry the opt-in; every ComputeBudget scan must have a v1 `transactionConfig` branch; every fee-payer service must detect version on the raw bytes (`0x81`) before its cap; every program introspection must not gate on ComputeBudget instructions.
+
 ### Terraform / IaC hygiene (DEP-080..DEP-086)
 ```
 # Terminal:

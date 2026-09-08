@@ -11,6 +11,8 @@ category: crypto
 
 Versioned (v0) transactions resolve some accounts by index into one or more Address Lookup Tables supplied by the transaction author. The runtime still enforces signer/writable flags and program ownership, but a program that trusts **account ordering or positional assumptions** — rather than re-deriving and asserting each account's address — can be fed substituted accounts through a malicious ALT. This is most dangerous for `remaining_accounts`, for "config"/"authority"/"treasury" accounts that are not `has_one`-bound, and for off-chain clients that build instructions assuming a fixed account list.
 
+> Scope note (transaction v1, SIMD-0385): v1 transactions carry **no** lookup tables — all ≤ 64 accounts are inline and duplicates are rejected at sanitization. The ALT substitution path below applies to v0 only; the underlying rule (bind privileged accounts by derivation, never by position) applies to every version, and v1 raises the positional surface to 64 inline accounts and 64 instructions (AV-090, `references/vuln-classes/transaction-v1.md`).
+
 #### Verification Procedure
 
 **Step 1: Identify positional / ordering assumptions**

@@ -203,6 +203,8 @@ How much value does the protocol currently manage?
 - [ ] Birdeye (token prices)
 - [ ] CoinGecko / CoinMarketCap
 - [ ] Token registry / risk API (tokens.xyz, RugCheck, Webacy, GoPlus) — used for: display / listing / collateral / routing: _______________
+- [ ] Geyser / Yellowstone gRPC stream or a transaction / block indexer (reads `getTransaction` / `getBlock` / `blockSubscribe`)
+- [ ] Fee sponsorship / paymaster / co-signing — this project signs as fee payer or second signer for user-built transactions
 - [ ] Chainlink / Pyth (oracles)
 - [ ] Stripe / payment processor
 - [ ] Analytics (Mixpanel, Amplitude, etc.)
@@ -422,6 +424,7 @@ _______________
 | Q11 = Single wallet | Auto-flags as Severity 8+ finding |
 | Q17 = Yes | Requires full economic review (checklist 06) |
 | Q18 / Q22 = token registry or risk API | Loads `references/methodologies/token-registry-risk.md` + KV-132 / KV-133 (identity spoofing, score farming) |
+| Q22 = Geyser stream / indexer or fee sponsorship | Loads `references/vuln-classes/transaction-v1.md` + KV-135 / KV-136 (transaction v1: sponsor cap bypass, reader wedge, zero-budget indexing) + checklist 20 §20.6, 09 §9.18 |
 | Q25 = First audit | Triggers more thorough analysis, no assumptions about prior fixes |
 | Q32 = No tests | Auto-flags testing gaps, enables checklist 16 recommendations |
 | Q35 = MiCA/GDPR | Enables compliance checklist (18) |

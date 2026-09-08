@@ -11,6 +11,8 @@ category: crypto
 
 A program that reads a sysvar (Clock, Rent, RecentBlockhashes, SlotHashes, Instructions) from a passed-in `AccountInfo` instead of the runtime syscall (`Clock::get()`, `Rent::get()`) can be fed an attacker-controlled account with forged contents. Forged `Clock` enables timestamp/slot manipulation (bypass cooldowns, vesting, auction windows, staleness checks). Forged `Instructions` sysvar enables introspection bypass (see KV-102). Anchor's `Sysvar<'info, T>` validates the address, but raw `AccountInfo` or `UncheckedAccount` typed sysvars do not.
 
+> Note (transaction v1, SIMD-0385): introspecting `ComputeBudgetProgram` instructions is unreliable even with a correctly pinned Instructions sysvar — under v1 those instructions are no-ops and the real compute / fee config lives in the message header, which no sysvar or syscall exposes. Any gate built on them is covered by KV-135 and AV-089.
+
 #### Verification Procedure
 
 **Step 1: Find all sysvar usage**

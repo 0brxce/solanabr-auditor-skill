@@ -62,6 +62,8 @@ Every item below is a single verification step. Mark each `[PASS]`, `[FAIL-{seve
 - [ ] **FE-038**: Multiple wallet support doesn't leak state between wallets
 - [ ] **FE-039**: Transaction builders validate all inputs before building instruction
 - [ ] **FE-040**: No race conditions in transaction submission (double-click protection)
+- [ ] **FE-083**: Before sending a v1 transaction to the connected wallet, the dApp checks that the wallet (and any hardware signer behind it) can sign version 1 — a signer that returns "invalid message" for byte `0x81` triggers an explicit fallback to v0 / legacy or a clear block, never a retry loop or a blind-sign prompt (see KV-067, `references/vuln-classes/transaction-v1.md` V8)
+- [ ] **FE-084**: The pre-sign simulation (FE-033) runs on the exact base64 bytes with the v1 config, and the fee shown to the user is the config `priorityFee` as a **total in lamports** plus base fee — no display derived from a micro-lamports-per-CU field that v1 does not carry
 
 ## 10.6 — Performance & DoS Prevention
 
