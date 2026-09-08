@@ -59,6 +59,10 @@ Every item below is a single verification step. Mark each `[PASS]`, `[FAIL-{seve
 - [ ] **TS-038**: BN arithmetic uses the correct methods (`.add()`, `.sub()`, `.mul()`, `.div()`) — not JS arithmetic on BN objects
 - [ ] **TS-039**: keypair handling — no private keys in source code or hardcoded
 - [ ] **TS-040**: Connection object uses committed/finalized commitment for financial reads
+- [ ] **TS-061**: Every `getTransaction` / `getBlock` / `blockSubscribe` call passes `maxSupportedTransactionVersion: 1` (a JSON integer) — no omission, no literal `0` / `"legacy"`; the error path for `-32015` / a failed block is an operational error, never "transaction not found" (see KV-136)
+- [ ] **TS-062**: Transaction version is detected structurally — wire byte 0 `=== 0x81` ⇒ v1; RPC JSON `message.transactionConfig` present ⇒ v1; gRPC `message.config` present ⇒ v1, *then* `versioned` ⇒ v0, else legacy — never inferred from size, from `versioned` alone, or from the presence of a ComputeBudget instruction; unknown versions are rejected
+- [ ] **TS-063**: Compute limits and priority fees are read through one version-agnostic accessor (config for v1, ComputeBudget scan for legacy / v0) that normalises to total lamports (`price × limit ÷ 1e6`) before any comparison, cap, or storage — a v1 tx is never recorded as zero-budget because the scan found nothing
+- [ ] **TS-064**: Senders building `version: 1` set `computeUnitLimit` and `loadedAccountsDataSizeLimit` explicitly (simulate with both maxed, add margin, round data size up to 32 KiB), use `setTransactionMessagePriorityFeeLamports` (total lamports, never a per-CU value), strip all ComputeBudget instructions, use no address lookup table and no duplicate addresses, encode `base64`, assert size with a version-aware check, and run on `@solana/kit` ≥ 8.0.0 / `@solana/web3.js` ≥ 3.0.0-rc.3 via the manual `pipe()` path (1.x is read-only; the kit plugin planner throws)
 
 ## 8.5 — Input Validation (zod)
 

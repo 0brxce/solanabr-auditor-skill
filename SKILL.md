@@ -1,12 +1,12 @@
 ---
 name: auditor-skill
-description: "**AUDIT SKILL** — Comprehensive on-chain Solana program auditor and full-stack security review for ANY programming language. USE FOR: auditing Solana/Anchor programs, reviewing smart contract security, checking for vulnerabilities (missing signers, unchecked accounts, arithmetic overflow, CPI attacks, PDA confusion, type cosplay, reinitialization, flash loan exploits, MEV, governance backdoors, timelock bypass), auditing TypeScript/Python/Go/Java/Ruby/PHP/any language, backend/frontend code review, supply chain safety, operational security (multisig, upgrade authority, deploy process), formal verification and testing quality, logging/monitoring/incident response, data privacy/GDPR/SOC2 compliance, change management, penetration testing methodology, AI/ML security, generating audit reports, running full repository audits. Severity 1-10 scale, 20 micro-checklist domains with 1390 individual verification items, plus 134 known attack vectors, chunked file-by-file execution, item-by-item verdicts. Benchmarked against CertiK (crypto) and EY/SOC2/COBIT (traditional) audit standards. DO NOT USE FOR: writing new features, general coding, non-security reviews."
+description: "**AUDIT SKILL** — Comprehensive on-chain Solana program auditor and full-stack security review for ANY programming language. USE FOR: auditing Solana/Anchor programs, reviewing smart contract security, checking for vulnerabilities (missing signers, unchecked accounts, arithmetic overflow, CPI attacks, PDA confusion, type cosplay, reinitialization, flash loan exploits, MEV, governance backdoors, timelock bypass), auditing TypeScript/Python/Go/Java/Ruby/PHP/any language, backend/frontend code review, supply chain safety, operational security (multisig, upgrade authority, deploy process), formal verification and testing quality, logging/monitoring/incident response, data privacy/GDPR/SOC2 compliance, change management, penetration testing methodology, AI/ML security, generating audit reports, running full repository audits. Severity 1-10 scale, 20 micro-checklist domains with 1413 individual verification items, plus 136 known attack vectors, chunked file-by-file execution, item-by-item verdicts. Benchmarked against CertiK (crypto) and EY/SOC2/COBIT (traditional) audit standards. DO NOT USE FOR: writing new features, general coding, non-security reviews."
 ---
 
 # auditor-skill — Multi-Language Security Audit Skill
 
-> **Version:** 7.2  
-> **Items:** 1,390 across 20 checklists (+ 134 known vectors)  
+> **Version:** 7.3  
+> **Items:** 1,413 across 20 checklists (+ 136 known vectors)  
 > **Languages:** Rust, TypeScript, Python, Go, Java, Ruby, PHP, + any via general checklist  
 > **Severity:** 1–10 numeric scale  
 > **Benchmarked against:** CertiK (crypto audit), EY/SOC 2/COBIT (traditional IT audit), OWASP Top 10:2025  
@@ -58,6 +58,7 @@ Checklists outside this set are **never read** — a Rust-only repo never loads 
 | `references/methodologies/token-registry-risk.md` | `tokens.xyz` · `tokenlist` · `assetId` · `canonical` · `getTokenBySymbol` · `coingeckoId` · `trustTier` · `riskScore` · `rugcheck` · `webacy` · `goplus` · `isVerified` |
 | `references/invariant-catalog.md` | building an FV/fuzz harness or reconstructing per-function invariants (Phase 0.5) — reusable invariant menus per protocol class |
 | `references/vuln-classes/zk-and-compression.md` | `groth16` · `spl-account-compression` · `bubblegum` · `merkle` · `nullifier` · `ConfidentialTransfer` |
+| `references/vuln-classes/transaction-v1.md` | `getTransaction` · `getBlock` · `blockSubscribe` · `maxSupportedTransactionVersion` · `yellowstone` · `geyser` · `ComputeBudgetProgram` · `computeUnitPrice` · `feePayer` / `sponsor` / `paymaster` service · `load_instruction_at` · `transactionConfig` · `0x81` |
 | `references/false-positives.md` | triaging any finding before reporting severity ≥ 6 |
 | `references/orchestration/boundary-map.md` | delegating to vendored Trail of Bits tooling |
 | `references/orchestration/pre-scan.md` | running the deterministic Rust pre-scanner (`audit-scan`) or the cross-audit memory store (`audit-mem`) |
@@ -89,7 +90,7 @@ Full severity table + decision guide: see [OUTPUT-RULES.md](OUTPUT-RULES.md) Rul
 Repositories can be 10 files or 10,000 files. The auditor reads files **one at a time**, never guesses, and saves checkpoints between chunks. See [OUTPUT-RULES.md](OUTPUT-RULES.md) Rule 3.
 
 ### 2. Every Item Gets a Verdict
-All in-scope checklist items (up to 1,390) and all in-scope known vectors (up to 134) appear in the report with explicit verdicts. Nothing is silently skipped. See [OUTPUT-RULES.md](OUTPUT-RULES.md) Rule 4.
+All in-scope checklist items (up to 1,413) and all in-scope known vectors (up to 136) appear in the report with explicit verdicts. Nothing is silently skipped. See [OUTPUT-RULES.md](OUTPUT-RULES.md) Rule 4.
 
 ### 3. Executive Summary First
 Every report starts with a plain-language summary: what was audited, what was found, whether it's safe to deploy. See [OUTPUT-RULES.md](OUTPUT-RULES.md) Rule 2.
@@ -156,27 +157,27 @@ Authoritative mapping → **Scope-Gated Loading, Step 2** (scope table) above. D
 
 | # | Checklist | Items | Domain | File |
 |---|-----------|-------|--------|------|
-| 01 | Account Validation | 88 | On-chain | [01-program-account-validation.md](checklists/01-program-account-validation.md) |
+| 01 | Account Validation | 90 | On-chain | [01-program-account-validation.md](checklists/01-program-account-validation.md) |
 | 02 | Access Control | 50 | On-chain | [02-program-access-control.md](checklists/02-program-access-control.md) |
 | 03 | Arithmetic Safety | 63 | On-chain | [03-program-arithmetic-safety.md](checklists/03-program-arithmetic-safety.md) |
 | 04 | CPI & PDA Safety | 70 | On-chain | [04-program-cpi-pda.md](checklists/04-program-cpi-pda.md) |
 | 05 | State Machine & Lifecycle | 72 | On-chain | [05-program-state-machine.md](checklists/05-program-state-machine.md) |
 | 06 | Economic & Logic Attacks | 89 | On-chain | [06-program-economic-logic.md](checklists/06-program-economic-logic.md) |
 | 07 | OpSec & Governance | 85 | Operations | [07-program-opsec-governance.md](checklists/07-program-opsec-governance.md) |
-| 08 | TypeScript Safety | 60 | Off-chain | [08-typescript-safety.md](checklists/08-typescript-safety.md) |
-| 09 | Backend Security | 126 | Off-chain | [09-backend-security.md](checklists/09-backend-security.md) |
-| 10 | Frontend Security | 82 | Off-chain | [10-frontend-security.md](checklists/10-frontend-security.md) |
+| 08 | TypeScript Safety | 64 | Off-chain | [08-typescript-safety.md](checklists/08-typescript-safety.md) |
+| 09 | Backend Security | 131 | Off-chain | [09-backend-security.md](checklists/09-backend-security.md) |
+| 10 | Frontend Security | 84 | Off-chain | [10-frontend-security.md](checklists/10-frontend-security.md) |
 | 11 | Supply Chain & Dependencies | 52 | DevOps | [11-supply-chain.md](checklists/11-supply-chain.md) |
 | 12 | Secrets & Key Management | 53 | DevOps | [12-secrets-opsec.md](checklists/12-secrets-opsec.md) |
-| 13 | Deployment & Infrastructure | 86 | DevOps | [13-deployment-infrastructure.md](checklists/13-deployment-infrastructure.md) |
+| 13 | Deployment & Infrastructure | 89 | DevOps | [13-deployment-infrastructure.md](checklists/13-deployment-infrastructure.md) |
 | 14 | Python Safety | 82 | Off-chain | [14-python-safety.md](checklists/14-python-safety.md) |
 | 15 | General Language Safety | 88 | Universal | [15-general-language-safety.md](checklists/15-general-language-safety.md) |
-| 16 | Formal Verification & Testing | 71 | Universal | [16-formal-verification-testing.md](checklists/16-formal-verification-testing.md) |
-| 17 | Logging, Monitoring & IR | 63 | Universal | [17-logging-monitoring-incident-response.md](checklists/17-logging-monitoring-incident-response.md) |
+| 16 | Formal Verification & Testing | 72 | Universal | [16-formal-verification-testing.md](checklists/16-formal-verification-testing.md) |
+| 17 | Logging, Monitoring & IR | 65 | Universal | [17-logging-monitoring-incident-response.md](checklists/17-logging-monitoring-incident-response.md) |
 | 18 | Privacy, Compliance & Change Mgmt | 60 | Universal | [18-privacy-compliance-change-management.md](checklists/18-privacy-compliance-change-management.md) |
 | 19 | AI Agent Security (Solana × AI) | 33 | AI / Agent | [19-ai-agent-security.md](checklists/19-ai-agent-security.md) |
-| 20 | Rust Off-Chain Services | 17 | Off-chain | [20-rust-offchain-services.md](checklists/20-rust-offchain-services.md) |
-| | **Total** | **1,390** | | |
+| 20 | Rust Off-Chain Services | 21 | Off-chain | [20-rust-offchain-services.md](checklists/20-rust-offchain-services.md) |
+| | **Total** | **1,413** | | |
 
 ---
 

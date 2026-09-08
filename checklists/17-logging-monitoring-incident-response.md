@@ -1,6 +1,6 @@
 # Checklist 17 — Logging, Monitoring & Incident Response
 
-> **Items:** 63  |  **IDs:** LM-001 → LM-063  
+> **Items:** 65  |  **IDs:** LM-001 → LM-065  
 > **Applies to:** All languages, all repository types  
 > **Sources:** CertiK Skynet (on-chain monitoring), SOC 2 Availability + Security criteria, OWASP A09:2025 (Security Logging and Alerting Failures), EY IT Audit (disaster recovery, BCM, change management)
 
@@ -51,7 +51,7 @@
 
 ---
 
-## 17.3 Monitoring & Alerting (LM-027 → LM-040)
+## 17.3 Monitoring & Alerting (LM-027 → LM-040, LM-064 → LM-065)
 
 > **Source:** CertiK Skynet, SOC 2 Security/Availability monitoring criteria
 
@@ -71,6 +71,8 @@
 | LM-038 | Token mint authority usage is monitored — unexpected mints trigger immediate alerts | 9 |
 | LM-039 | Monitoring dashboards are accessible to the team (not just one person) | 3 |
 | LM-040 | Monitoring systems themselves have redundancy — single monitoring failure doesn't blind the team | 4 |
+| LM-064 | Indexing and monitoring pipelines record the **transaction version** and the v1 `transactionConfig` (compute-unit limit, loaded-accounts data-size limit, heap size, priority fee in total lamports) per transaction in dedicated fields; any dashboard or metric that shows a priority fee labels its units (v0 micro-lamports per CU vs v1 lamports total) and never mixes them in one series (see KV-136) | 5 |
+| LM-065 | Stream and reader liveness is alarmed: `blockSubscribe` / Geyser slot not advancing for N seconds or a `block: null`, a rise in `getTransaction` / `getBlock` error `-32015`, and a spike in transactions indexed with a zero compute budget or zero priority fee (the signature of a silent v1 misparse) each page an operator (see KV-136, `references/vuln-classes/transaction-v1.md` V10) | 6 |
 
 ---
 
