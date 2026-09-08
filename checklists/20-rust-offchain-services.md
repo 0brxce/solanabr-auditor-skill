@@ -54,6 +54,15 @@ Every item below is a single verification step. Mark each `[PASS]`, `[FAIL-{seve
 - [ ] **RS-016**: Secrets are never logged, `Debug`-printed, or included in error messages / spans — secret-holding types have a redacting `Debug` impl (or `secrecy`'s), and no `tracing`/`log` call takes a key as a field
 - [ ] **RS-017**: Key loading fails **secure**: a missing/unreadable/malformed keyfile or env var aborts startup (or the sign path) with an error — the service never proceeds with a default, empty, all-zero, or attacker-supplyable key, and keys are read from env/secret store/file (mode `600`), never a committed constant
 
+## 20.6 — Transaction-Format Compatibility (Indexers, Geyser Consumers, Keepers)
+
+> Transaction v1 (SIMD-0385, 4,096 bytes, message-level compute config, no ComputeBudget instructions, no lookup tables) is mandatory to *read* once active. A Rust indexer or keeper that assumes the legacy / v0 shape errors, wedges, or — worst — keeps running on silently zeroed budgets. See `references/vuln-classes/transaction-v1.md`.
+
+- [ ] **RS-018**: Every `get_transaction_with_config` / `get_block_with_config` / block subscription passes `max_supported_transaction_version: Some(1)` — never `None` or `Some(0)`; a `-32015` / block error is surfaced as an operational failure (alert), not mapped to "not found", and never retried into a double-processed event
+- [ ] **RS-019**: gRPC / Geyser version discrimination checks `Message.config` (proto field 7) **before** `versioned` (`versioned` is true for both v0 and v1); `yellowstone-grpc-proto` ≥ 12.6.0 is pinned directly in `Cargo.toml` (the client crate's own minimum lacks field 7), generated code is regenerated, and the upstream plugin version (≥ 15.1.1, no v1 → v0 downgrade) is confirmed or the consumer alarms on a `VersionedMessage` it cannot classify
+- [ ] **RS-020**: Budget / fee extraction is one version-agnostic function (`VersionedMessage::V1(m) => m.config`, legacy / v0 ⇒ ComputeBudget scan with `price × limit / 1_000_000`) that returns explicit `Option`s and normalised lamports; `transaction_config` is persisted per transaction with its version; unknown-variant decode errors go through `?`, never `unwrap` (RS-001)
+- [ ] **RS-021**: Keepers / bots that send v1 build with `v1::Message::try_compile_with_config` and a `TransactionConfig` that sets `compute_unit_limit` and `loaded_accounts_data_size_limit` explicitly (estimated by simulation with margin, data size rounded up to 32 KiB), `priority_fee` in total lamports, no ComputeBudget instructions, no lookup tables, no duplicate addresses, base64 encoding for simulate / send, and assert the feature gate is active on the target cluster before the first v1 submission
+
 ---
 
 ## How to Use This Checklist
@@ -64,3 +73,4 @@ Every item below is a single verification step. Mark each `[PASS]`, `[FAIL-{seve
 4. **Apply 20.5** only to services that hold signing keys (signer services, keeper/liquidator bots, hot-wallet automation). Read-only indexers with no key → mark 20.5 `[N/A]`.
 5. Pair RS-010/RS-011 with checklist 03 (on-chain arithmetic) — the same class of bug, different default (debug-only checks off-chain).
 6. Pair 20.5 with `known-vectors/112` and checklist 12 (secrets & opsec) for the storage/rotation side.
+7. **Apply 20.6** to any service that reads transactions / blocks (RPC or Geyser) or submits them — it is the transaction-format compatibility layer (transaction v1, SIMD-0385); pair with `references/vuln-classes/transaction-v1.md` and KV-135 / KV-136.

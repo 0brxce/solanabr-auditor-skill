@@ -126,3 +126,9 @@ Every item below is a single verification step. Mark each `[PASS]`, `[FAIL-{seve
 - [ ] **DEP-084**: `terraform apply` runs only from the protected default branch via OIDC / workload-identity federation (no long-lived cloud JSON keys in CI secrets); fork PRs get at most a read-only `plan` and cannot reach cloud credentials
 - [ ] **DEP-085**: One service account per service with least privilege — nothing runs as the default compute service account, and no service account holds `roles/editor` / `roles/owner`
 - [ ] **DEP-086**: Deploys pin image digests (`@sha256:` not `:latest`), and a rollback workflow (previous-revision traffic split) exists and has been exercised at least once
+
+## 13.12 — Runtime Upgrade & Feature-Gate Readiness (Transaction v1)
+
+- [ ] **DEP-087**: Solana client libraries are at or above the minimum for the runtime features active on the target cluster and are pinned in the lockfile — for transaction v1: `@solana/kit` ≥ 8.0.0, `@solana/web3.js` ≥ 3.0.0-rc.3 (1.x ≥ 1.99.0 read-only), Rust `solana-*` ≥ 4.2, `solders` ≥ 0.29.0, `yellowstone-grpc-proto` ≥ 12.6.0 pinned directly, Yellowstone geyser ≥ 15.1.1, `@triton-one/yellowstone-grpc` ≥ 6.0.0, local validator / CLI ≥ 4.2 or Surfpool ≥ 1.5; generated protobuf stubs are regenerated, not just version-bumped
+- [ ] **DEP-088**: Tracked feature gates (e.g. `txv1aq4pp281K9um3tnPgkfX8UqtFT6wcVW3hNezGLL`) are monitored per cluster with an alert on activation; readers and indexers are upgraded **before** the gate activates on the cluster they consume, and the staging validator runs with the gate enabled so the v1 path is exercised pre-mainnet
+- [ ] **DEP-089**: Ingress and storage handle the new envelope — relayer / QUIC stream windows accept 4,096-byte transactions, archive and cold-storage read paths round-trip a v1 transaction without downgrading through a v0-only model, and `getSignaturesForAddress`-style paths that are unaffected are documented as such rather than assumed

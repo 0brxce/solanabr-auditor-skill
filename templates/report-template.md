@@ -121,7 +121,7 @@
 | 18 | Privacy, Compliance & Change Mgmt | 60 | | | | | % |
 | 19 | AI Agent Security | 31 | | | | | % |
 | 20 | Rust Off-Chain Services | 17 | | | | | % |
-| | **Total** | **1390** | | | | | **%** |
+| | **Total** | **1413** | | | | | **%** |
 
 > Note: Only applicable checklists are counted in totals. Non-applicable checklists are excluded entirely.
 
@@ -204,7 +204,7 @@
               Impact: {what can go wrong}
               Fix: {what to change}
 [N/A]       AV-004: {why not applicable}
-...through AV-088
+...through AV-090
 ```
 
 ### Checklist 02 — Access Control
@@ -253,21 +253,21 @@
 
 ```
 [PASS]      TS-001: {reason}
-...through TS-060
+...through TS-064
 ```
 
 ### Checklist 09 — Backend Security
 
 ```
 [PASS]      BE-001: {reason}
-...through BE-126
+...through BE-131
 ```
 
 ### Checklist 10 — Frontend Security
 
 ```
 [PASS]      FE-001: {reason}
-...through FE-082
+...through FE-084
 ```
 
 ### Checklist 11 — Supply Chain
@@ -288,7 +288,7 @@
 
 ```
 [PASS]      DEP-001: {reason}
-...through DEP-086
+...through DEP-089
 ```
 
 ### Checklist 14 — Python Safety (if applicable)
@@ -309,14 +309,14 @@
 
 ```
 [PASS]      FV-001: {reason}
-...through FV-071
+...through FV-072
 ```
 
 ### Checklist 17 — Logging, Monitoring & Incident Response
 
 ```
 [PASS]      LM-001: {reason}
-...through LM-063
+...through LM-065
 ```
 
 ### Checklist 18 — Privacy, Compliance & Change Management
@@ -326,7 +326,7 @@
 ...through PC-060
 ```
 
-### Known Vectors Results (KV-001..KV-134)
+### Known Vectors Results (KV-001..KV-136)
 
 ```
 [PASS]      KV-001: {reason}
@@ -334,7 +334,7 @@
               File: {path:line}
               Impact: {what can go wrong}
               Fix: {what to change}
-...through KV-134
+...through KV-136
 ```
 
 ---
@@ -356,7 +356,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Total known vectors | 134 |
+| Total known vectors | 136 |
 | PASS | <!-- N --> |
 | FAIL | <!-- N --> |
 | PARTIAL | <!-- N --> |
