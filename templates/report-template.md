@@ -121,7 +121,7 @@
 | 18 | Privacy, Compliance & Change Mgmt | 60 | | | | | % |
 | 19 | AI Agent Security | 31 | | | | | % |
 | 20 | Rust Off-Chain Services | 17 | | | | | % |
-| | **Total** | **1424** | | | | | **%** |
+| | **Total** | **1433** | | | | | **%** |
 
 > Note: Only applicable checklists are counted in totals. Non-applicable checklists are excluded entirely.
 
@@ -232,21 +232,21 @@
 
 ```
 [PASS]      SM-001: {reason}
-...through SM-072
+...through SM-074
 ```
 
 ### Checklist 06 — Economic & Logic
 
 ```
 [PASS]      ECON-001: {reason}
-...through ECON-089
+...through ECON-092
 ```
 
 ### Checklist 07 — OpSec & Governance
 
 ```
 [PASS]      OPS-001: {reason}
-...through OPS-085
+...through OPS-087
 ```
 
 ### Checklist 08 — TypeScript Safety
@@ -260,7 +260,7 @@
 
 ```
 [PASS]      BE-001: {reason}
-...through BE-131
+...through BE-132
 ```
 
 ### Checklist 10 — Frontend Security
@@ -309,7 +309,7 @@
 
 ```
 [PASS]      FV-001: {reason}
-...through FV-072
+...through FV-073
 ```
 
 ### Checklist 17 — Logging, Monitoring & Incident Response
@@ -326,7 +326,7 @@
 ...through PC-060
 ```
 
-### Known Vectors Results (KV-001..KV-137)
+### Known Vectors Results (KV-001..KV-138)
 
 ```
 [PASS]      KV-001: {reason}
@@ -334,7 +334,7 @@
               File: {path:line}
               Impact: {what can go wrong}
               Fix: {what to change}
-...through KV-137
+...through KV-138
 ```
 
 ---
@@ -356,7 +356,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Total known vectors | 137 |
+| Total known vectors | 138 |
 | PASS | <!-- N --> |
 | FAIL | <!-- N --> |
 | PARTIAL | <!-- N --> |
