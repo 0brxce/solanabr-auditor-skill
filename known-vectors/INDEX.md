@@ -215,6 +215,12 @@ Every row carries a **Load when (markers)** cell: the grep/prescan markers that 
 |---|--------|----------|---------------------|
 | 137 | [White-Label / Vendored On-Chain Program Version Drift & Inherited Admin Surface](137-vendored-program-version-drift.md) | 8 | always (crypto) |
 
+### Runtime Timing: 200 ms Slots & the Alpenglow Clock (138)
+
+| # | Vector | Severity | Load when (markers) |
+|---|--------|----------|---------------------|
+| 138 | [Slot-Denominated Time After SIMD-0525 (Slot Used as a Clock)](138-slot-denominated-time-assumptions.md) | 7 | `clock.slot` · `Clock::get()?.slot` · `SLOTS_PER_YEAR` · `DEFAULT_TICKS_PER_SLOT` · `DEFAULT_MS_PER_SLOT` · `*_slot` duration / deadline fields · epoch-denominated lockups · `warp_to_slot` · `216_000` / `432_000` |
+
 ---
 
 ## Known Duplicates & Consolidation Map
@@ -233,11 +239,11 @@ double-count them as independent coverage. Severities are aligned to the higher 
 | 039 | 083 | Rate limiting (bypass / missing) | 7 |
 | 047 | 099 | WebSocket security | 7 |
 
-**Distinct concepts:** 131 (137 files − 6 duplicate pairs).
+**Distinct concepts:** 132 (138 files − 6 duplicate pairs).
 
 ---
 
-**Total vector files:** 137 (100 original + 9 in v4.4 + 8 in v5.0 + 3 in v5.1 + 6 in v6.0 + 3 in v6.1 + 2 in v6.2 + 3 in v7.2 + 2 in v7.3 + 1 in v7.4)
-**Distinct concepts:** 131 (after consolidating 6 duplicate pairs)
+**Total vector files:** 138 (100 original + 9 in v4.4 + 8 in v5.0 + 3 in v5.1 + 6 in v6.0 + 3 in v6.1 + 2 in v6.2 + 3 in v7.2 + 2 in v7.3 + 1 in v7.4 + 1 in v7.5)
+**Distinct concepts:** 132 (after consolidating 6 duplicate pairs)
 **Categories:** 6 (crypto, backend, frontend, devops, ai-agent, off-chain-rust)
 **Severity range:** 3-10
