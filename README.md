@@ -5,7 +5,7 @@
 # auditor-skill — Open-Source AI Security Audit Skill
 
 > Production-grade security audit for any codebase, powered by AI agents.
-> 20 checklists · 1,424 verification items · 137 known attack vectors · executable PoCs + fix patches
+> 20 checklists · 1,433 verification items · 138 known attack vectors · executable PoCs + fix patches
 > A full audit-firm lifecycle (automated + interactive) · Benchmarked against CertiK, SOC 2, OWASP Top 10:2025
 > Verify COSTS.md as a referecence - Running this audit can burn a lot of credits.
 
@@ -13,7 +13,7 @@
 
 ## What Is This?
 
-auditor-skill is a **skill file** (a structured prompt + checklists) that turns any LLM agent (Copilot, Cursor, Windsurf, Claude Code, Codex, etc.) into a professional-grade security auditor. It reads your code file by file, checks 1,424 items across 20 security domains, tests against 137 real-world attack vectors, and produces a structured report with severity scores.
+auditor-skill is a **skill file** (a structured prompt + checklists) that turns any LLM agent (Copilot, Cursor, Windsurf, Claude Code, Codex, etc.) into a professional-grade security auditor. It reads your code file by file, checks 1,433 items across 20 security domains, tests against 138 real-world attack vectors, and produces a structured report with severity scores.
 
 **It is not a SaaS product.** It's a folder of markdown files you clone into your repo or give to an AI agent.
 
@@ -21,8 +21,9 @@ auditor-skill is a **skill file** (a structured prompt + checklists) that turns 
 
 ---
 
-## What It Does (v7.4)
+## What It Does (v7.5)
 
+- **Slot-as-clock coverage (v7.5).** SIMD-0525 halved mainnet slot time to 200 ms (Oct 9, 2026) and Alpenglow (Oct 21, 2026) made `Clock.unix_timestamp` a leader-set value, so every timelock, vesting cliff, cooldown, oracle window, rate limit and interest constant denominated in slots now elapses in half the wall-clock time. KV-138 covers the class (the EVM learned it at the Merge with Compound's `blocksPerYear`; deployed lending programs still carrying `SLOTS_PER_YEAR = 63,072,000`, whether from an old-SDK build of SPL token-lending, the Save fork's literal or Kamino's legacy basis, now accrue 2.5x the configured APR), with SM-073..074, ECON-090..092, OPS-086..087, BE-132 and FV-073 as the per-domain checks.
 - **Vendored-program provenance (v7.4).** Coverage for the newest exploited class on Solana — the Rain white-label card-contract exploit (Aug 2026, ~$1.1M across Avici, Tria and other tenants): KV-137 (deployed-program version drift, fleet blast radius, inherited admin surface), off-chain-signed authority-grant checks (AC-051..055 — the `AddCollateralAdmin` signature-bundle failure) and deployed-program provenance checks (SC-053..058) — the layer `cargo audit` / `npm audit` can't see, because the vulnerable artifact is your own deployed program.
 - **Transaction v1 readiness (v7.3).** A vuln-class playbook for SIMD-0385 / SIMD-0296 (4,096-byte transactions, message-level compute config, no ComputeBudget instructions, no lookup tables): who breaks and how, per-role worksheets for RPC readers, indexers / Geyser consumers, fee sponsors / co-signers, introspecting programs, senders and wallets; KV-135 (sponsor cap bypass, disabled ComputeBudget gates) and KV-136 (reader wedge, zero-budget indexing); 23 checklist items across on-chain, TypeScript, backend, frontend, deployment, testing, monitoring and off-chain Rust.
 - **Token registries & permissioned tokens (v7.2).** A registry / risk-signal methodology (canonical-asset resolution, primary-variant ranking, score farming — grounded in the open-sourced tokens.xyz stack), Token ACL (SRFC-37) gate-program coverage inside the Token-2022 playbook, and web-stack items for hosted auth, API-key issuance, external data providers, Next.js 16, Bun / Turborepo and GCP / Terraform.
@@ -52,15 +53,15 @@ auditor-skill is a **skill file** (a structured prompt + checklists) that turns 
 
 | Language | Checklists | Items |
 |----------|-----------|-------|
-| Rust (Solana/Anchor) | 01-07 | 524 |
+| Rust (Solana/Anchor) | 01-07 | 531 |
 | Rust (off-chain services) | 20 | 21 |
-| TypeScript / Node.js | 08-09 | 195 |
+| TypeScript / Node.js | 08-09 | 196 |
 | React / Next.js | 08, 10 | 148 |
 | Python | 14 | 82 |
 | Go / Java / Ruby / PHP | 15 | 88 |
 | AI / agent components | 19 | 33 |
-| **Always applied** (any repo) | 11-13, 16-18 | 397 |
-| **Total** | **20** | **1,424** |
+| **Always applied** (any repo) | 11-13, 16-18 | 398 |
+| **Total** | **20** | **1,433** |
 
 ---
 
@@ -142,7 +143,7 @@ The audit is complete when every **in-scope** item has an explicit verdict; out-
 
 | Scope | What It Covers | Estimated Time (50K lines) |
 |-------|---------------|---------------------------|
-| FULL | Everything — all 20 checklists + 137 vectors | 60-90 min |
+| FULL | Everything — all 20 checklists + 138 vectors | 60-90 min |
 | PROGRAM | Smart contract only (checklists 01-07) | 20-35 min |
 | BACKEND | Backend API (checklists 08-09) | 15-25 min |
 | FRONTEND | Frontend (checklists 08, 10) | 15-25 min |
@@ -176,18 +177,18 @@ auditor-skill/
 │   ├── 02-program-access-control.md        (55 items)
 │   ├── 03-program-arithmetic-safety.md     (63 items)
 │   ├── 04-program-cpi-pda.md              (70 items)
-│   ├── 05-program-state-machine.md         (72 items)
-│   ├── 06-program-economic-logic.md        (89 items)
-│   ├── 07-program-opsec-governance.md      (85 items)
+│   ├── 05-program-state-machine.md         (74 items)
+│   ├── 06-program-economic-logic.md        (92 items)
+│   ├── 07-program-opsec-governance.md      (87 items)
 │   ├── 08-typescript-safety.md             (64 items)
-│   ├── 09-backend-security.md             (131 items)
+│   ├── 09-backend-security.md             (132 items)
 │   ├── 10-frontend-security.md             (84 items)
 │   ├── 11-supply-chain.md                  (58 items)
 │   ├── 12-secrets-opsec.md                 (53 items)
 │   ├── 13-deployment-infrastructure.md     (89 items)
 │   ├── 14-python-safety.md                 (82 items)
 │   ├── 15-general-language-safety.md       (88 items)
-│   ├── 16-formal-verification-testing.md   (72 items)
+│   ├── 16-formal-verification-testing.md   (73 items)
 │   ├── 17-logging-monitoring-incident-response.md (65 items)
 │   ├── 18-privacy-compliance-change-management.md (60 items)
 │   ├── 19-ai-agent-security.md (33 items) — AI agents on Solana
@@ -262,8 +263,8 @@ The audit produces a structured markdown report with:
 1. **Executive Summary** — risk score (1-10), deploy/no-deploy verdict, severity distribution
 2. **Instruction Matrix** — every smart contract instruction mapped
 3. **State Model** — account structs, PDA seeds, relationships
-4. **Per-Item Verdicts** — every in-scope checklist item (up to 1,424) with `[PASS]`, `[FAIL-N]`, `[PARTIAL]`, or `[N/A]`
-5. **Known Vectors Results** — each in-scope attack vector (up to 137) with explicit verdict and evidence
+4. **Per-Item Verdicts** — every in-scope checklist item (up to 1,433) with `[PASS]`, `[FAIL-N]`, `[PARTIAL]`, or `[N/A]`
+5. **Known Vectors Results** — each in-scope attack vector (up to 138) with explicit verdict and evidence
 6. **Findings** — deduplicated, severity-sorted
 7. **Attack Scenarios** — narrative exploitable paths
 8. **Aggregate Score** — PASS/PARTIAL/FAIL percentages
@@ -380,7 +381,7 @@ MIT — use it, fork it, improve it, sell services built on it. Attribution appr
 ## FAQ
 
 **Q: Does this replace a professional audit?**
-A: It covers more items than most paid audits (1,424 plus 137 known-vector checks vs typical 50-200), but an AI auditor cannot do everything a human can (social engineering assessment, business logic review requiring domain expertise, legal compliance opinions). Use this as a first pass, then hire humans for what it flags.
+A: It covers more items than most paid audits (1,433 plus 138 known-vector checks vs typical 50-200), but an AI auditor cannot do everything a human can (social engineering assessment, business logic review requiring domain expertise, legal compliance opinions). Use this as a first pass, then hire humans for what it flags.
 
 **Q: Which AI model should I use?**
 A: See [COSTS.md](COSTS.md). For maximum depth, use Opus 4 or o3. For best value, use Sonnet 4 or GPT-4.1. For CI/CD integration (fast, cheap), use Haiku or o4-mini.

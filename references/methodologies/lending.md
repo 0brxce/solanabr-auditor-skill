@@ -105,7 +105,7 @@ The single most-exploited surface in Solana lending. Every price read must enfor
    (`require_keys_eq!` against the Pyth feed / Switchboard aggregator / Scope chain). **Loopscale
    lost $5.8M** because the oracle account was user-supplied with no pin.
 2. **Program-ID pin** — `oracle_account.owner == expected_oracle_program`.
-3. **Staleness** — `clock.slot − price.publish_slot ≤ MAX_STALENESS` (typical 25–60 slots); stale ⇒
+3. **Staleness** — `clock.slot − price.publish_slot ≤ MAX_STALENESS` (typical 25–60 slots, which is 5-12 s at 200 ms slots since Oct 2026: re-derive the bound in seconds, KV-138 / ECON-091); stale ⇒
    reject the whole instruction, no silent fallback.
 4. **Confidence** — Pyth `conf/price` (or Switchboard variance) below a configured bps cap.
 5. **Manipulation resistance** — thin-liquidity assets priced via TWAP/EMA/median-of-N. **Nirvana

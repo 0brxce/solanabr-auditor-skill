@@ -123,7 +123,7 @@
 
 ---
 
-## 16.7 Solana-Native Verification Tooling — Is the Suite Appropriate to the Risk? (FV-071 → FV-072)
+## 16.7 Solana-Native Verification Tooling — Is the Suite Appropriate to the Risk? (FV-071 → FV-073)
 
 > **Source:** Solana verification/fuzzing ecosystem. Turns "does a fuzz/FV suite even exist, and is it the right one?" into an actionable check. Verify the suite uses **at least one** tool appropriate to the protocol's risk profile — high-value DeFi math warrants equivalence/invariant proving, not just a unit-test smoke pass.
 
@@ -131,3 +131,4 @@
 |----|-------|----------|
 | FV-071 | The project uses at least one Solana-appropriate verification/fuzzing tool matched to its risk: **Trident** (stateful/guided fuzzing of instruction sequences), **Crucible** (sBPF invariant fuzzing, no source needed), **Riverguard** (mainnet-transaction mutation replay), **Certora CVL** (equivalence + invariant induction — expected for high-value DeFi math), **Kani** (bounded model-checking proofs), or **Mollusk/LiteSVM** (fast in-process harness). A high-value protocol whose only "verification" is a handful of happy-path unit tests fails this item. | 6 |
 | FV-072 | The suite exercises the **current transaction format**: readers / indexers round-trip a fixture block containing a v1 transaction (`maxSupportedTransactionVersion: 1`, `transactionConfig` persisted with correct units); fee sponsors / co-signers are tested with a v1 transaction whose fee lives in the config and which carries no-op ComputeBudget instructions (must be rejected above cap); on-chain programs are run under a runtime with the v1 gate active (`solana-test-validator` ≥ 4.2 / Surfpool ≥ 1.5) so 4,096-byte transactions and no-op budget instructions are covered (see KV-135 / KV-136) | 5 |
+| FV-073 | Time-dependent tests model wall-clock, not slot counts: when a test advances time (`warp_to_slot`, `set_sysvar(Clock)`), `unix_timestamp` advances consistently with the live slot duration (200 ms since Oct 2026), and at least one test asserts each security-relevant duration (timelock, cliff, staleness bound, rate-limit window, interest accrued per year) in **seconds** against the documented policy, so the suite cannot pass with a timelock that is half as long on mainnet or an interest constant that accrues 2.5x the configured APR (see KV-138, SM-073, ECON-090) | 6 |
